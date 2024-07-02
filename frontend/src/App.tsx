@@ -14,7 +14,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route element={<PrivateRoutes/>}>
-            <Route path="/blogs" element={<Blogs />} />
+            <Route path="/" element={<Blogs />} />
             <Route path="/blog/:id" element={<Blog />} />
             <Route path='/publish' element = {<Publish/>}/>
           </Route>
