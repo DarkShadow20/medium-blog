@@ -7,6 +7,7 @@ import { BACKEND_URL } from "../config";
 
 export const Auth = ({type}:{type :"signup"| "signin"})=>{
     const navigate = useNavigate()
+    const [loadingStatus,setLoadingStatus] = useState<boolean>(false)
     const [postInputs,setPostInputs] = useState<SignupInput>({
         name:"",
         username:"",
@@ -15,13 +16,18 @@ export const Auth = ({type}:{type :"signup"| "signin"})=>{
 
     async function sendRequest(){
         try{
+            setLoadingStatus(true)
             const response = await axios.post(`${BACKEND_URL}/api/v1/user/${type === "signup"?"signup":"signin"}`,postInputs)
             const jwt = response.data
             localStorage.setItem("token",jwt.jwt)
+            setLoadingStatus(false)
             navigate('/')
         }catch(e){
-
+            console.log(e)
         }
+    }
+    function buttonText (){
+        return type === "signup" ? loadingStatus ? "loading" : "Sign Up" :loadingStatus?"loading" : "Sign In"
     }
     return <div className="h-screen flex justify-center flex-col">
         <div className="flex justify-center ">
@@ -56,7 +62,8 @@ export const Auth = ({type}:{type :"signup"| "signin"})=>{
                             password:e.target.value
                         })
                     }}/>
-                    <button onClick={sendRequest} type="button" className="mt-8 w-full text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">{type === "signup" ? "Sign Up" : "Sign In"}</button>
+                    <button onClick={sendRequest} type="button" className="mt-8 w-full text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+                        {buttonText()}</button>
 
                 </div>
             </div>
